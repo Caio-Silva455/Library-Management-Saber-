@@ -1,17 +1,18 @@
-# 📚 Sistema de Biblioteca Escolar
+# 📚 Biblioteca Escola Saber
 
-Sistema web fullstack para gerenciamento de uma biblioteca escolar, com cadastro de alunos, livros, autores, editoras, empréstimos e histórico de multas.
+Sistema web fullstack para gerenciamento de biblioteca escolar — cadastro de alunos, livros, autores, editoras, empréstimos e histórico de multas.
 
 ---
 
 ## 🛠️ Tecnologias
 
 | Camada | Tecnologia |
-|--------|-----------|
-| Banco de dados | Microsoft SQL Server 2022 (Linux/Ubuntu 22.04) |
+|--------|------------|
+| Banco de dados | Microsoft SQL Server 2022 (Docker) |
 | Backend | Node.js + Express |
-| Frontend | HTML + Tailwind CSS (via CDN) |
-| Gerenciador de BD | DBeaver 26 |
+| Frontend | Angular 17+ com Tailwind CSS |
+| ORM / Driver | `mssql` (tedious) |
+| Gerenciador de BD | DBeaver |
 
 ---
 
@@ -19,23 +20,21 @@ Sistema web fullstack para gerenciamento de uma biblioteca escolar, com cadastro
 
 ```
 trabalhoWeb/
-├── backend/
-│   ├── server.js         # API REST (Express)
-│   ├── .env              # Variáveis de ambiente (não versionar)
-│   ├── package.json
-│   └── node_modules/
-└── frontend/
-    ├── index.html        # Dashboard
-    ├── script.js         # Lógica de busca global
-    ├── style.css
-    └── pages/
-        ├── aluno.html
-        ├── livro.html
-        ├── area_conhecimento.html
-        ├── editora.html
-        ├── cidade.html
-        ├── endereco.html
-        └── historico.html
+└── biblioteca/
+    ├── backend/
+    │   ├── server.js             # API REST (Express)
+    │   ├── .env                  # Variáveis de ambiente (não versionar)
+    │   ├── package.json
+    │   └── node_modules/
+    └── src/
+        └── app/
+            ├── aluno/            # Cadastro de alunos (wizard 4 etapas)
+            ├── area-conhecimento/
+            ├── dashboard/
+            ├── editora/
+            ├── exemplar/         # Empréstimos e devoluções
+            ├── historico/        # Histórico com multas
+            └── livro/
 ```
 
 ---
@@ -46,14 +45,16 @@ trabalhoWeb/
 **Esquema:** `dbo`  
 **Porta:** `1433`
 
-### Tabelas
+### Diagrama de relacionamento
 
 ```
 Estado → Cidade → Endereco → Aluno
-Editora → Livro ← Autor  (via Autor_Livro)
-                ← Area_Conhecimento (via Area_Livro)
+Editora → Livro ← Autor         (via Autor_Livro)
+               ← Area_Conhecimento (via Area_Livro)
 Livro → Exemplar → Exemplar_Emprestado → Historico
 ```
+
+### Tabelas
 
 | Tabela | Descrição |
 |--------|-----------|
@@ -78,79 +79,96 @@ Livro → Exemplar → Exemplar_Emprestado → Historico
 ### 1. Pré-requisitos
 
 - Node.js v18+
-- SQL Server 2022 rodando localmente na porta 1433
-- DBeaver (opcional, para gerenciar o banco)
+- Docker (para o SQL Server)
+- Angular CLI (`npm install -g @angular/cli`)
 
-### 2. Variáveis de ambiente
+### 2. Subir o SQL Server via Docker
+
+```bash
+docker run -e "ACCEPT_EULA=Y" -e "SA_PASSWORD=SuaSenha@1" \
+  -p 1433:1433 --name sqlserver \
+  --restart always \
+  -d mcr.microsoft.com/mssql/server:2022-latest
+```
+
+### 3. Variáveis de ambiente
 
 Crie o arquivo `backend/.env`:
 
 ```env
 DB_USER=sa
-DB_PASSWORD=SuaSenha
+DB_PASSWORD=SuaSenha@1
 DB_SERVER=localhost
 DB_PORT=1433
 DB_NAME=Biblioteca_Escola_Saber
 ```
 
-### 3. Instalar dependências
+### 4. Instalar dependências e rodar o backend
 
 ```bash
 cd backend
 npm install
+node server.js
+# ✅ Servidor rodando na porta 4000
 ```
 
-### 4. Iniciar o servidor
+### 5. Rodar o frontend
 
 ```bash
-node server.js
-# 🚀 Servidor rodando na porta 4000
+cd biblioteca
+npm install
+ng serve
+# ✅ Disponível em http://localhost:4200
 ```
-
-### 5. Abrir o frontend
-
-Abra o `frontend/index.html` com o Live Server do VS Code (porta 5500) ou qualquer servidor estático.
 
 ---
 
 ## 🌐 API — Endpoints
 
-### GETs (listagem com filtro opcional `?busca=termo`)
+### Listagem (GET)
 
-| Método | Rota | Descrição |
-|--------|------|-----------|
-| GET | `/autores` | Lista autores |
-| GET | `/alunos` | Lista alunos |
-| GET | `/livros` | Lista livros |
-| GET | `/editoras` | Lista editoras |
-| GET | `/cidades` | Lista cidades |
-| GET | `/estados` | Lista estados |
-| GET | `/areas-conhecimento` | Lista áreas |
-| GET | `/enderecos` | Lista endereços |
-| GET | `/historico` | Histórico com joins (aluno + livro) |
+| Rota | Descrição | Filtro |
+|------|-----------|--------|
+| `GET /alunos` | Lista alunos | `?busca=` |
+| `GET /livros` | Lista livros | `?busca=` |
+| `GET /autores` | Lista autores | `?busca=` |
+| `GET /editoras` | Lista editoras | `?busca=` |
+| `GET /estados` | Lista estados | — |
+| `GET /cidades` | Lista cidades | — |
+| `GET /enderecos` | Lista endereços | — |
+| `GET /areas-conhecimento` | Lista áreas | `?busca=` |
+| `GET /exemplar-emprestado` | Lista empréstimos | — |
+| `GET /historico` | Histórico com joins | `?busca=` |
 
-### POSTs (criação via Stored Procedures)
+### Criação (POST)
 
-| Método | Rota | Body |
-|--------|------|------|
-| POST | `/autores` | `{ nome }` |
-| POST | `/alunos` | `{ nome, cpf, telefone, email, turma, dataNascimento, idEndereco }` |
-| POST | `/livros` | `{ titulo, idioma, isbn, anoPublicacao, idEditora }` |
-| POST | `/editoras` | `{ nome }` |
-| POST | `/cidades` | `{ nome, idEstado }` |
-| POST | `/estados` | `{ nome }` |
-| POST | `/enderecos` | `{ cep, logradouro, bairro, complemento, idCidade }` |
-| POST | `/areas-conhecimento` | `{ nome }` |
-| POST | `/autor-livro` | `{ idAutor, idLivro }` |
-| POST | `/area-livro` | `{ idArea, idLivro }` |
+| Rota | Body |
+|------|------|
+| `POST /alunos` | `{ nome, cpf, telefone, email, turma, dataNascimento, idEndereco }` |
+| `POST /livros` | `{ titulo, idioma, isbn, anoPublicacao, idEditora }` |
+| `POST /autores` | `{ nome }` |
+| `POST /editoras` | `{ nome }` |
+| `POST /estados` | `{ nome }` |
+| `POST /cidades` | `{ nome, idEstado }` |
+| `POST /enderecos` | `{ cep, logradouro, bairro, complemento, idCidade }` |
+| `POST /areas-conhecimento` | `{ nome }` |
+| `POST /autor-livro` | `{ idAutor, idLivro }` |
+| `POST /area-livro` | `{ idArea, idLivro }` |
+| `POST /exemplar-emprestado` | `{ idAluno, idExemplar, dataEmprestimo, dataDevolucao }` |
+
+### Atualização (PUT)
+
+| Rota | Descrição |
+|------|-----------|
+| `PUT /exemplar-emprestado/:id/devolver` | Registra devolução |
 
 ---
 
-## 📋 Fluxo de Cadastro
+## 📋 Fluxos de Cadastro
 
-### Aluno
+### Aluno (wizard 4 etapas)
 ```
-1. Estado → 2. Cidade → 3. Endereço → 4. Aluno
+1. Estado → 2. Cidade → 3. Endereço → 4. Dados do Aluno
 ```
 
 ### Livro
@@ -164,19 +182,19 @@ Abra o `frontend/index.html` com o Live Server do VS Code (porta 5500) ou qualqu
 
 Todas as operações de escrita usam Stored Procedures no SQL Server:
 
-- `sp_InserirAluno` / `sp_AlterarAluno` / `sp_ExcluirAluno`
-- `sp_InserirLivro`
-- `sp_InserirAutor` / `sp_AlterarAutor` / `sp_ExcluirAutor`
-- `sp_InserirAutorLivro`
-- `sp_InserirAreaLivro`
-- `sp_InserirEditora` / `sp_AlterarEditora` / `sp_ExcluirEditora`
-- `sp_InserirCidade` / `sp_AlterarCidade` / `sp_ExcluirCidade`
-- `sp_InserirEstado` / `sp_AlterarEstado` / `sp_ExcluirEstado`
-- `sp_InserirEndereco` / `sp_AlterarEndereco` / `sp_ExcluirEndereco`
-- `sp_InserirAreaConhecimento` / `sp_AlterarAreaConhecimento` / `sp_ExcluirAreaConhecimento`
+**Aluno:** `sp_InserirAluno` · `sp_AlterarAluno` · `sp_ExcluirAluno`  
+**Livro:** `sp_InserirLivro`  
+**Autor:** `sp_InserirAutor` · `sp_AlterarAutor` · `sp_ExcluirAutor`  
+**Editora:** `sp_InserirEditora` · `sp_AlterarEditora` · `sp_ExcluirEditora`  
+**Cidade:** `sp_InserirCidade` · `sp_AlterarCidade` · `sp_ExcluirCidade`  
+**Estado:** `sp_InserirEstado` · `sp_AlterarEstado` · `sp_ExcluirEstado`  
+**Endereço:** `sp_InserirEndereco` · `sp_AlterarEndereco` · `sp_ExcluirEndereco`  
+**Área:** `sp_InserirAreaConhecimento` · `sp_AlterarAreaConhecimento` · `sp_ExcluirAreaConhecimento`  
+**Vínculos:** `sp_InserirAutorLivro` · `sp_InserirAreaLivro`
 
 ---
 
 ## 👤 Autor
 
-Desenvolvido por **Caio Silva** — estudante de Análise e Desenvolvimento de Sistemas (ADS) na FATEC São Paulo.
+Desenvolvido por **Caio Silva**  
+Estudante de Análise e Desenvolvimento de Sistemas (ADS) — UVV, Vila Velha/ES
