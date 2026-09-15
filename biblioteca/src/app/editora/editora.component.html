@@ -1,0 +1,120 @@
+<body class="bg-slate-100 text-slate-800 antialiased">
+  <div class="flex min-h-screen">
+    <!-- CONTEÚDO -->
+    <main class="flex-1 p-8">
+      <!-- HEADER -->
+      <header class="mb-8">
+        <h2 class="text-4xl font-bold text-slate-800">Cadastro de Editoras</h2>
+
+        <p class="text-slate-500 mt-2">
+          Cadastre editoras e selos editoriais no sistema da biblioteca.
+        </p>
+      </header>
+
+      <!-- CARD -->
+      <section class="bg-white rounded-2xl shadow-sm border border-slate-200 p-8 max-w-4xl">
+        <!-- TOPO -->
+        <div class="flex items-center gap-4 mb-8">
+          <div class="bg-orange-100 text-orange-600 p-4 rounded-2xl text-3xl">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              fill="currentColor"
+              class="bi bi-building-fill-add"
+              viewBox="0 0 16 16"
+            >
+              <path
+                d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7m.5-5v1h1a.5.5 0 0 1 0 1h-1v1a.5.5 0 0 1-1 0v-1h-1a.5.5 0 0 1 0-1h1v-1a.5.5 0 0 1 1 0"
+              />
+              <path
+                d="M2 1a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v7.256A4.5 4.5 0 0 0 12.5 8a4.5 4.5 0 0 0-3.59 1.787A.5.5 0 0 0 9 9.5v-1a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .39-.187A4.5 4.5 0 0 0 8.027 12H6.5a.5.5 0 0 0-.5.5V16H3a1 1 0 0 1-1-1zm2 1.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5m3 0v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5m3.5-.5a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5zM4 5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5M7.5 5a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5zm2.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5M4.5 8a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5z"
+              />
+            </svg>
+          </div>
+
+          <div>
+            <h2 class="text-2xl font-bold text-slate-700">Nova Editora</h2>
+
+            <p class="text-slate-400 text-sm mt-1">
+              Adicione empresas e selos editoriais para organização dos livros.
+            </p>
+          </div>
+        </div>
+
+        <!-- FORM -->
+        <div class="flex flex-col gap-6">
+          <div>
+            <label class="block text-sm font-semibold text-slate-600 mb-2"> Nome da Editora </label>
+
+            <input
+              type="text"
+              id="nomeEditora"
+              placeholder="Ex: Companhia das Letras, Rocco, HarperCollins..."
+              class="w-full border border-slate-200 rounded-xl px-4 py-4 outline-none focus:ring-2 focus:ring-[#243e58] transition"
+            />
+          </div>
+        </div>
+
+        <!-- BOTÕES -->
+        <div class="flex flex-col sm:flex-row gap-4 mt-8">
+          <button
+            id="btnSalvar"
+            type="button"
+            (click)="salvarEditora()"
+            class="flex-1 inline-flex items-center justify-center gap-2 bg-[#243e58] hover:bg-[#1a2f43] active:scale-[0.99] text-white font-semibold py-4 rounded-xl transition-all duration-200 shadow-sm hover:shadow-md disabled:opacity-60 disabled:cursor-not-allowed text-sm md:text-base"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="18"
+              height="18"
+              fill="currentColor"
+              class="bi bi-floppy-fill"
+              viewBox="0 0 16 16"
+              aria-hidden="true"
+            >
+              <path
+                d="M0 1.5A1.5 1.5 0 0 1 1.5 0H3v5.5A1.5 1.5 0 0 0 4.5 7h7A1.5 1.5 0 0 0 13 5.5V0h.086a1.5 1.5 0 0 1 1.06.44l1.415 1.414A1.5 1.5 0 0 1 16 2.914V14.5a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 0 14.5zm3 0v4.5a.5.5 0 0 0 .5.5h7a.5.5 0 0 0 .5-.5V1.5z"
+              />
+              <path
+                d="M3 9a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 .5 .5v5a.5.5 0 0 1-.5 .5h-9a.5.5 0 0 1-.5-.5z"
+              />
+            </svg>
+            <span id="btnSalvarTexto">Salvar Editora</span>
+          </button>
+
+          <button
+            type="button"
+            (click)="nomeEditora = ''"
+            class="bg-slate-200 hover:bg-slate-300 active:scale-[0.99] text-slate-700 font-semibold px-6 py-4 rounded-xl transition-all text-sm md:text-base"
+          >
+            Limpar
+          </button>
+        </div>
+
+        <!-- FEEDBACK -->
+        <div
+          id="feedback-mensagem"
+          class="mt-6 text-sm font-medium min-h-[20px] transition-all duration-200"
+        ></div>
+      </section>
+
+      <!-- CARD EXTRA -->
+      <section class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 max-w-4xl mt-6">
+        <div class="flex items-center justify-between flex-wrap gap-4">
+          <div>
+            <h3 class="text-lg font-bold text-slate-700">📖 Organização Editorial</h3>
+
+            <p class="text-slate-400 text-sm mt-1">
+              Relacione livros às editoras para facilitar controle e buscas.
+            </p>
+          </div>
+
+          <div class="bg-slate-100 px-5 py-3 rounded-xl text-slate-600 font-medium">
+            Sistema Ativo ✅
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+</body>

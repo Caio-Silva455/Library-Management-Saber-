@@ -1,0 +1,223 @@
+<div class="flex min-h-screen bg-slate-100 text-slate-800 antialiased w-full">
+  <main class="flex-1 p-4 md:p-8 overflow-x-hidden">
+    
+    <header class="mb-8">
+      <h2 class="text-3xl md:text-4xl font-bold text-slate-800 tracking-tight">Dashboard Geral</h2>
+      <p class="text-slate-500 mt-2 text-sm md:text-base">
+        Gerencie alunos, livros, editoras e pesquisas da biblioteca.
+      </p>
+    </header>
+
+    <section class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-6 mb-8">
+      <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200/60 hover:shadow-md transition duration-200">
+        <div class="flex justify-between items-center">
+          <div>
+            <p class="text-slate-400 text-sm font-medium">Alunos</p>
+            <h3 class="text-3xl font-bold mt-2 text-slate-800">
+              <span *ngIf="carregandoContadores" class="animate-pulse text-slate-300">···</span>
+              <span *ngIf="!carregandoContadores">{{ totalAlunos }}</span>
+            </h3>
+          </div>
+          <div class="bg-blue-100 text-blue-600 p-4 rounded-xl shrink-0">
+            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" viewBox="0 0 16 16">
+              <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6m2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0m4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4m-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10s-3.516.68-4.168 1.332c-.678.678-.83 1.418-.832 1.664z"/>
+            </svg>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200/60 hover:shadow-md transition duration-200">
+        <div class="flex justify-between items-center">
+          <div>
+            <p class="text-slate-400 text-sm font-medium">Livros</p>
+            <h3 class="text-3xl font-bold mt-2 text-slate-800">
+              <span *ngIf="carregandoContadores" class="animate-pulse text-slate-300">···</span>
+              <span *ngIf="!carregandoContadores">{{ totalLivros }}</span>
+            </h3>
+          </div>
+          <div class="bg-violet-100 text-violet-600 p-4 rounded-xl shrink-0">
+            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" viewBox="0 0 16 16">
+              <path d="M1 2.828c.885-.37 2.154-.769 3.388-.893 1.33-.134 2.458.063 3.112.752v9.746c-.935-.53-2.12-.603-3.213-.493-1.18.12-2.37.461-3.287.811zm7.5-.141c.654-.689 1.782-.886 3.112-.752 1.234.124 2.503.523 3.388.893v9.923c-.918-.35-2.107-.692-3.287-.81-1.094-.111-2.278-.039-3.213.492zM8 1.783C7.015.936 5.587.81 4.287.94c-1.514.153-3.042.672-3.994 1.105A.5.5 0 0 0 0 2.5v11a.5.5 0 0 0 .707.455c.882-.4 2.303-.881 3.68-1.02 1.409-.142 2.59.087 3.223.877a.5.5 0 0 0 .78 0c.633-.79 1.814-1.019 3.222-.877 1.378.139 2.8.62 3.681 1.02A.5.5 0 0 0 16 13.5v-11a.5.5 0 0 0-.293-.455c-.952-.433-2.48-.952-3.994-1.105C10.413.809 8.985.936 8 1.783"/>
+            </svg>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200/60 hover:shadow-md transition duration-200">
+        <div class="flex justify-between items-center">
+          <div>
+            <p class="text-slate-400 text-sm font-medium">Exemplares</p>
+            <h3 class="text-3xl font-bold mt-2 text-slate-800">
+              <span *ngIf="carregandoContadores" class="animate-pulse text-slate-300">···</span>
+              <span *ngIf="!carregandoContadores">{{ totalExemplares }}</span>
+            </h3>
+          </div>
+          <div class="bg-amber-100 text-amber-600 p-4 rounded-xl shrink-0">
+            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" viewBox="0 0 16 16">
+              <path d="M0 2a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1v7.5a2.5 2.5 0 0 1-2.5 2.5h-9A2.5 2.5 0 0 1 1 12.5V5a1 1 0 0 1-1-1zm2 3v7.5A1.5 1.5 0 0 0 3.5 14h9a1.5 1.5 0 0 0 1.5-1.5V5zm13-3H1v2h14zM5 7.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5"/>
+            </svg>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200/60 hover:shadow-md transition duration-200">
+        <div class="flex justify-between items-center">
+          <div class="flex-1 min-w-0">
+            <p class="text-slate-400 text-sm font-medium truncate">Empréstimos Ativos</p>
+            <h3 class="text-3xl font-bold mt-2 text-slate-800">
+              <span *ngIf="carregandoContadores" class="animate-pulse text-slate-300">···</span>
+              <span *ngIf="!carregandoContadores">{{ totalEmprestimosAtivos }}</span>
+            </h3>
+            
+            <div class="mt-3 flex items-center gap-2">
+              <span class="inline-block w-2 h-2 rounded-full shrink-0"
+                    [ngClass]="{
+                      'bg-emerald-500': statusServidor === 'online',
+                      'bg-red-500': statusServidor === 'offline',
+                      'bg-amber-400 animate-pulse': statusServidor === 'verificando'
+                    }">
+              </span>
+              <span class="text-xs font-semibold truncate"
+                    [ngClass]="{
+                      'text-emerald-600': statusServidor === 'online',
+                      'text-red-500': statusServidor === 'offline',
+                      'text-amber-500': statusServidor === 'verificando'
+                    }">
+                Banco 
+                <ng-container [ngSwitch]="statusServidor">
+                  <span *ngSwitchCase="'online'">Online</span>
+                  <span *ngSwitchCase="'offline'">Offline</span>
+                  <span *ngSwitchCase="'verificando'">Verificando…</span>
+                </ng-container>
+              </span>
+            </div>
+          </div>
+          <div class="bg-emerald-100 text-emerald-600 p-4 rounded-xl shrink-0 ml-2">
+            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" viewBox="0 0 16 16">
+              <path d="M3.904 13.5c.342.13.784.24 1.258.324C6.12 14 7.152 14 8 14c.848 0 1.88-.001 2.838-.176a8.8 8.8 0 0 0 .426-.148 1.5 1.5 0 0 1-.22-.387l-.143-.357a6 6 0 0 1-5.69-5.115H3.904c-.342.13-.784.24-1.258.324C1.68 8 1 8 1 8.5c0 .536.886 1.13 2.904 1.5m0-4.5c.342.13.784.24 1.258.324C6.12 9.5 7.152 9.5 8 9.5q.418 0 .822-.007a6 6 0 0 1 3.518-2.923C11.516 6.13 10.289 6 8 6s-3.516.68-4.096 1.332C2.68 7.5 2 7.5 2 8c0 .536.886 1.13 2.904 1.5M8 4c2.289 0 3.516-.68 4.096-1.332C13.32 2.5 14 2.5 14 2c0-.536-.886-1.13-2.904-1.5C10.12 0 9.08 0 8 0s-2.12.001-3.096.176C2.886.35 2 0.942 2 1.5c0 .536.886 1.13 2.904 1.5C5.88 3.141 6.92 3.16 8 4"/>
+              <path d="M16 12.5a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0m-3.5 1.793 2.146-2.147a.5.5 0 0 0-.708-.708l-1.438 1.439-1.012-1.013a.5.5 0 0 0-.708.708z"/>
+            </svg>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 mb-8">
+      <div class="flex items-center gap-3 mb-5">
+        <div class="bg-slate-100 text-slate-600 p-3 rounded-xl shrink-0">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16">
+            <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
+          </svg>
+        </div>
+        <div>
+          <h2 class="text-xl font-bold text-slate-800">Pesquisa Avançada</h2>
+          <p class="text-slate-400 text-xs md:text-sm">Pesquise dados diretamente do banco SQL Server</p>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">
+        <select [(ngModel)]="tabelaSelecionada" class="border border-slate-200 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 bg-white text-sm text-slate-700 font-medium cursor-pointer transition">
+          <option value="Aluno">👤 Alunos</option>
+          <option value="Livro">📖 Livros</option>
+          <option value="Autor">✍️ Autores</option>
+          <option value="Editora">🏢 Editoras</option>
+          <option value="Cidade">🏙️ Cidades</option>
+          <option value="Area_Conhecimento">🧪 Áreas de Conhecimento</option>
+          <option value="Exemplar">📦 Exemplares</option>
+        </select>
+
+        <input [(ngModel)]="termoBusca" (keydown.enter)="executarBuscaGeral()" type="text" autocomplete="off" placeholder="Digite o termo da busca (ou deixe vazio para buscar todos)..." class="md:col-span-2 border border-slate-200 rounded-xl px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition" />
+
+        <div class="flex gap-3 md:col-span-3 lg:col-span-1">
+          <button type="button" (click)="executarBuscaGeral()" [disabled]="carregandoBusca" class="flex-1 bg-slate-800 hover:bg-slate-700 disabled:opacity-50 text-white font-semibold rounded-xl px-5 py-3 text-sm transition-all shadow-sm flex items-center justify-center gap-2">
+            <span *ngIf="!carregandoBusca">Buscar</span>
+            <span *ngIf="carregandoBusca" class="flex items-center justify-center gap-2">
+              <span class="animate-spin h-4 w-4 border-2 border-white border-t-transparent rounded-full"></span>
+              Buscando…
+            </span>
+          </button>
+          
+          <button type="button" (click)="limparBuscaGeral()" title="Limpar busca" class="bg-slate-100 hover:bg-red-500 hover:text-white text-slate-600 font-bold px-4 rounded-xl transition-all flex items-center justify-center border border-slate-200/40">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+              <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <section class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
+      <div class="mb-5">
+        <h2 class="text-xl font-bold text-slate-800 flex items-center gap-2">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16" class="text-slate-500">
+            <path fill-rule="evenodd" d="M10 1.5a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5zm-5 0A1.5 1.5 0 0 1 6.5 0h3A1.5 1.5 0 0 1 11 1.5v1A1.5 1.5 0 0 1 9.5 4h-3A1.5 1.5 0 0 1 5 2.5zm-2 0h1v1A2.5 2.5 0 0 0 6.5 5h3A2.5 2.5 0 0 0 12 2.5v-1h1a2 2 0 0 1 2 2V14a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V3.5a2 2 0 0 1 2-2"/>
+          </svg>
+          Resultados da Pesquisa
+        </h2>
+        <p class="text-slate-400 text-sm mt-1">
+          <ng-container *ngIf="buscaRealizada && !erroBusca">
+            {{ resultados.length }} registro(s) encontrado(s) para <strong>"{{ ultimaBusca }}"</strong>
+          </ng-container>
+          <ng-container *ngIf="!buscaRealizada">
+            Os dados encontrados aparecerão abaixo.
+          </ng-container>
+        </p>
+      </div>
+
+      <div class="overflow-x-auto rounded-xl border border-slate-200/60 bg-slate-50/50 min-h-[250px]">
+        
+        <div *ngIf="!buscaRealizada && !carregandoBusca" class="flex flex-col items-center justify-center h-[240px] text-slate-400 text-center px-4">
+          <div class="text-4xl mb-3">📚</div>
+          <p class="text-base font-semibold text-slate-600">Nenhuma busca realizada</p>
+          <span class="text-xs text-slate-400 mt-1 max-w-xs">Selecione uma categoria acima e digite o filtro para consultar.</span>
+        </div>
+
+        <div *ngIf="carregandoBusca" class="flex flex-col items-center justify-center h-[240px] text-slate-400">
+          <span class="animate-spin h-9 w-9 mb-3 border-4 border-slate-300 border-t-slate-800 rounded-full"></span>
+          <p class="text-sm font-medium text-slate-600">Consultando o banco de dados…</p>
+        </div>
+
+        <div *ngIf="buscaRealizada && erroBusca" class="flex flex-col items-center justify-center h-[240px] text-center px-4">
+          <div class="text-4xl mb-3">⚠️</div>
+          <p class="text-base font-semibold text-red-600">Erro ao buscar dados</p>
+          <span class="text-xs text-red-400 mt-1 max-w-sm">{{ erroBusca }}</span>
+        </div>
+
+        <div *ngIf="buscaRealizada && !erroBusca && resultados.length === 0" class="flex flex-col items-center justify-center h-[240px] text-center px-4">
+          <div class="text-4xl mb-3">🔍</div>
+          <p class="text-base font-semibold text-slate-600">Nenhum resultado encontrado</p>
+          <span class="text-xs text-slate-400 mt-1">Tente usar palavras-chave diferentes.</span>
+        </div>
+
+        <table *ngIf="buscaRealizada && !erroBusca && resultados.length > 0" class="w-full text-sm text-slate-700 whitespace-nowrap">
+          <thead>
+            <tr class="bg-slate-100/80 border-b border-slate-200 text-slate-500 uppercase text-xs font-bold tracking-wider">
+              <th *ngFor="let col of colunas" class="text-left px-5 py-3.5">
+                {{ formatarLabel(col) }}
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let row of resultados; let i = index" class="border-b border-slate-200/50 hover:bg-slate-50/80 bg-white transition duration-150">
+              <td *ngFor="let col of colunas" class="px-5 py-3 text-slate-600 font-medium">
+                
+                <span *ngIf="col === 'status_exemplar'" class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold"
+                      [ngClass]="{
+                        'bg-emerald-100 text-emerald-700': row[col] === 'disponivel',
+                        'bg-red-100 text-red-700': row[col] === 'emprestado',
+                        'bg-slate-100 text-slate-500': row[col] !== 'disponivel' && row[col] !== 'emprestado'
+                      }">
+                  {{ formatarValor(row[col]) }}
+                </span>
+
+                <span *ngIf="col !== 'status_exemplar'">
+                  {{ formatarValor(row[col]) }}
+                </span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+</div>
