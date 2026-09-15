@@ -197,10 +197,51 @@ Todas as operações de escrita usam Stored Procedures no SQL Server:
 ## 👤 Autor
 
 Desenvolvido por **Caio Silva**  
-<<<<<<< HEAD
 Estudante de Análise e Desenvolvimento de Sistemas (ADS) — UVV, Vila Velha/ES
 
 
+## 🐳 Como rodar com Docker
+
+### Pré-requisitos
+- Docker e Docker Compose instalados
+
+### Passos
+
+1. Copie o arquivo de variáveis de ambiente:
+   ```bash
+   cp .env.example .env
+   ```
+2. Ajuste os valores em `.env` se necessário (senha do banco, etc.).
+3. Suba os containers:
+   ```bash
+   docker compose up --build
+   ```
+4. Acesse:
+   - **Frontend (Angular):** http://localhost:8080
+   - **Backend (API):** http://localhost:4000
+   - **Banco de dados (SQL Server):** localhost:1433
+
+### Arquitetura
+
+| Serviço  | Imagem base           | Porta host | Função                         |
+|----------|------------------------|------------|---------------------------------|
+| frontend | nginx:alpine            | 8080       | Serve o Angular buildado        |
+| backend  | node:20-alpine          | 4000       | API Express                     |
+| db       | mssql/server:2022-latest| 1433       | Banco de dados SQL Server       |
+
+Os três serviços se comunicam pela rede `biblioteca-net`, e os dados do banco
+são persistidos no volume nomeado `db-data`, então nada se perde ao reiniciar
+os containers.
+
+### Parar e remover os containers
+```bash
+docker compose down
+```
+
+### Parar e remover os containers **e o volume do banco** (apaga os dados)
+```bash
+docker compose down -v
+```
 
 
 ideias 
@@ -208,6 +249,4 @@ ideias
 qr code para poder, imprimir no cadastro dos livros e usuarios
 campo de RA - codigo unico 
 nota de receber via email 
-=======
-Estudante de Análise e Desenvolvimento de Sistemas (ADS) — UVV, Vila Velha/ES
->>>>>>> 6d55cdf109f59d5589c8da8e2421c3f2e20baa58
+# Library-Management-Saber-
