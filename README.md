@@ -197,4 +197,17 @@ Todas as operações de escrita usam Stored Procedures no SQL Server:
 ## 👤 Autor
 
 Desenvolvido por **Caio Silva**  
+<<<<<<< HEAD
 Estudante de Análise e Desenvolvimento de Sistemas (ADS) — UVV, Vila Velha/ES
+
+
+
+
+ideias 
+
+qr code para poder, imprimir no cadastro dos livros e usuarios
+campo de RA - codigo unico 
+nota de receber via email 
+=======
+Estudante de Análise e Desenvolvimento de Sistemas (ADS) — UVV, Vila Velha/ES
+>>>>>>> 6d55cdf109f59d5589c8da8e2421c3f2e20baa58
