@@ -7,7 +7,7 @@ services:
       MSSQL_SA_PASSWORD: ${DB_SA_PASSWORD}
       MSSQL_PID: Express
     ports:
-      - "1434:1433"
+      - "1433:1433"
     volumes:
       - db-data:/var/opt/mssql
     networks:
@@ -23,13 +23,14 @@ services:
       context: ./backend
       dockerfile: Dockerfile
     container_name: biblioteca-backend
+    env_file:
+      - .env
     environment:
       DB_SERVER: db
       DB_PORT: 1433
       DB_USER: sa
-      DB_PASSWORD: "YourStrong@Password123"
-      DB_SA_PASSWORD: "YourStrong@Password123"
-      DB_NAME: "Biblioteca_Escola_Saber"
+      DB_PASSWORD: ${DB_SA_PASSWORD}
+      DB_NAME: ${DB_NAME}
     depends_on:
       db:
         condition: service_healthy
