@@ -12,11 +12,11 @@ app.use(express.json());
 // ─── CONFIGURAÇÃO DO BANCO ────────────────────────────────────────────────────
 
 const config = {
-    user: process.env.DB_USER,
-    password: process.env.DB_PASSWORD,
-    server: process.env.DB_SERVER,
+    user: process.env.DB_USER || 'sa',
+    password: process.env.DB_SA_PASSWORD || process.env.DB_PASSWORD,
+    server: process.env.DB_SERVER || 'db',
     port: parseInt(process.env.DB_PORT) || 1433,
-    database: process.env.DB_NAME,
+    database: process.env.DB_NAME || 'Biblioteca_Escola_Saber',
     options: { encrypt: true, trustServerCertificate: true }
 };
 
