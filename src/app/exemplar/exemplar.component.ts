@@ -15,11 +15,11 @@ interface Aluno {
 interface Emprestimo {
   id: number;
   idAluno: number;
-  nomeAluno?: string;
+  nomeAluno: string;
   idExemplar: number;
   dataEmprestimo: string;
   dataDevolucaoPrevista?: string;
-  dataDevolucao?: string;
+  dataDevolucao: string;
 }
 
 interface ApiResponse {
@@ -97,7 +97,7 @@ export class ExemplarComponent implements OnInit {
   // ─── Registrar empréstimo ─────────────────────────────────────────────────
 
   async registrarEmprestimo(): Promise<void> {
-    if (!this.idAlunoSelecionado || !this.idExemplar.trim() || !this.dataEmprestimo) {
+    if (!this.idAlunoSelecionado || !String(this.idExemplar || '').trim() || !this.dataEmprestimo) {
       this.setMsg('Preencha aluno, exemplar e data.', 'erro');
       return;
     }
