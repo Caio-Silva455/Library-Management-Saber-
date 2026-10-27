@@ -421,12 +421,14 @@ app.get('/historico/:id', async (req, res) => {
 // ─── POSTs ────────────────────────────────────────────────────────────────────
 
 app.post('/alunos', async (req, res) => {
-    console.log(req.body)
-    const { nome, cpf, telefone, email, turma, data_nascimento, idEndereco } = req.body;
+    const { nome, cpf, telefone, email, turma, idEndereco } = req.body;
+    const data_nascimento = req.body.data_nascimento || req.body.dataNascimento; // <--- Aceita os dois formatos
+
     if (!nome || !cpf || !telefone || !data_nascimento || !idEndereco)
         return res.status(400).json({ erro: 'nome, cpf, telefone, data_nascimento e idEndereco são obrigatórios' });
+    
     try {
-        await execSP('sp_InserirAluno', r =>
+        await execSP('sp_InserirAluno', r => {
             r.input('nome', sql.VarChar(100), nome)
              .input('cpf', sql.VarChar(14), cpf)
              .input('telefone', sql.VarChar(20), telefone)
@@ -434,7 +436,7 @@ app.post('/alunos', async (req, res) => {
              .input('turma', sql.VarChar(15), turma ?? null)
              .input('data_nascimento', sql.Date, data_nascimento)
              .input('idEndereco', sql.Int, idEndereco)
-        );
+        });
         res.status(201).json({ mensagem: 'Aluno cadastrado com sucesso!' });
     } catch (err) {
         res.status(500).json({ erro: err.message });
