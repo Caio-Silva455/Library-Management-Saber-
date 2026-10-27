@@ -434,7 +434,7 @@ app.post('/alunos', async (req, res) => {
              .input('telefone', sql.VarChar(20), telefone)
              .input('email', sql.VarChar(100), email ?? null)
              .input('turma', sql.VarChar(15), turma ?? null)
-             .input('data_nascimento', sql.Date, data_nascimento)
+             .input('dataNascimento', sql.Date, data_nascimento)
              .input('idEndereco', sql.Int, idEndereco)
         });
         res.status(201).json({ mensagem: 'Aluno cadastrado com sucesso!' });
