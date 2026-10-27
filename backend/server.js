@@ -421,6 +421,7 @@ app.get('/historico/:id', async (req, res) => {
 // ─── POSTs ────────────────────────────────────────────────────────────────────
 
 app.post('/alunos', async (req, res) => {
+    console.log(req.body)
     const { nome, cpf, telefone, email, turma, data_nascimento, idEndereco } = req.body;
     if (!nome || !cpf || !telefone || !data_nascimento || !idEndereco)
         return res.status(400).json({ erro: 'nome, cpf, telefone, data_nascimento e idEndereco são obrigatórios' });

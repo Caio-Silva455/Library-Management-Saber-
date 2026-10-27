@@ -296,3 +296,13 @@ Todas as operações de escrita usam Stored Procedures no SQL Server:
 
 Desenvolvido por **Caio Silva**
 Estudante de Análise e Desenvolvimento de Sistemas (ADS) — UVV, Vila Velha/ES
+
+
+
+
+
+
+
+
+
+Docker que ele está puxando é da minha maquin, tenho que fazer ele puxar o docker do servidor
