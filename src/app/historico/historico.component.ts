@@ -20,7 +20,7 @@ interface HistoricoItem {
   titulo?: string;
 
   // id do exemplar
-  idExemplarEmprestado?: number;
+  idExemplar_Emprestado?: number;
   idExemplar?: number;
   id_exemplar?: number;
 
@@ -118,7 +118,7 @@ export class HistoricoComponent implements OnInit {
   private mapItem(item: HistoricoItem): HistoricoView {
     const nomeAluno     = item.nome_aluno ?? item.NOME_ALUNO ?? item.nome ?? 'N/A';
     const tituloLivro   = item.titulo_livro ?? item.TITULO_LIVRO ?? item.titulo ?? 'N/A';
-    const idExemplar    = item.idExemplarEmprestado ?? item.idExemplar ?? item.id_exemplar ?? '-';
+    const idExemplar    = item.idExemplar_Emprestado ?? item.idExemplar ?? item.id_exemplar ?? '-';
     const dataEmpRaw    = item.data_emprestimo ?? item.DATA_EMPRESTIMO;
     const dataDevRaw    = item.data_devolucao ?? item.DATA_DEVOLUCAO;
     const dataMultaRaw  = item.data_pagamento_multa ?? item.DATA_PAGAMENTO_MULTA;

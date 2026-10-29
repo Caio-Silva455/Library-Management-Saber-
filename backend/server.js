@@ -373,11 +373,11 @@ app.get('/historico', async (req, res) => {
                 h.data_devolucao, 
                 h.data_pagamento_multa, 
                 h.descricao, 
-                h.idExemplarEmprestado,
+                h.idExemplar_Emprestado,
                 al.nome AS nome_aluno, 
                 liv.titulo AS titulo_livro
             FROM Historico h
-            INNER JOIN Exemplar_Emprestado ee ON h.idExemplarEmprestado = ee.id
+            INNER JOIN Exemplar_Emprestado ee ON h.idExemplar_Emprestado = ee.id
             INNER JOIN Aluno al ON ee.idAluno = al.id
             INNER JOIN Exemplar ex ON ee.idExemplar = ex.id
             INNER JOIN Livro liv ON ex.idLivro = liv.id
@@ -402,10 +402,10 @@ app.get('/historico/:id', async (req, res) => {
             .input('id', sql.Int, parseInt(req.params.id))
             .query(`
                 SELECT h.id, h.data_emprestimo, h.data_devolucao, h.data_pagamento_multa,
-                       h.descricao, h.idExemplarEmprestado,
+                       h.descricao, h.idExemplar_Emprestado,
                        al.nome AS nome_aluno, liv.titulo AS titulo_livro
                 FROM Historico h
-                INNER JOIN Exemplar_Emprestado ee ON h.idExemplarEmprestado = ee.id
+                INNER JOIN Exemplar_Emprestado ee ON h.idExemplar_Emprestado = ee.id
                 INNER JOIN Aluno al ON ee.idAluno = al.id
                 INNER JOIN Exemplar ex ON ee.idExemplar = ex.id
                 INNER JOIN Livro liv ON ex.idLivro = liv.id
@@ -591,16 +591,16 @@ app.post('/exemplar-emprestado', async (req, res) => {
 });
 
 app.post('/historico', async (req, res) => {
-    const { data_emprestimo, data_devolucao, data_pagamento_multa, descricao, idExemplarEmprestado } = req.body;
-    if (!data_emprestimo || !idExemplarEmprestado)
-        return res.status(400).json({ erro: 'data_emprestimo e idExemplarEmprestado são obrigatórios' });
+    const { data_emprestimo, data_devolucao, data_pagamento_multa, descricao, idExemplar_Emprestado } = req.body;
+    if (!data_emprestimo || !idExemplar_Emprestado)
+        return res.status(400).json({ erro: 'data_emprestimo e idExemplar_Emprestado são obrigatórios' });
     try {
         await execSP('sp_InserirHistorico', r =>
             r.input('data_emprestimo', sql.Date, data_emprestimo)
              .input('data_devolucao', sql.Date, data_devolucao ?? null)
              .input('data_pagamento_multa', sql.Date, data_pagamento_multa ?? null)
              .input('descricao', sql.VarChar(255), descricao ?? null)
-             .input('idExemplarEmprestado', sql.Int, idExemplarEmprestado)
+             .input('idExemplar_Emprestado', sql.Int, idExemplar_Emprestado)
         );
         res.status(201).json({ mensagem: 'Registro de histórico inserido com sucesso!' });
     } catch (err) {
@@ -863,9 +863,9 @@ app.put('/exemplar-emprestado/:id/devolver', async (req, res) => {
 
 app.put('/historico/:id', async (req, res) => {
     const { id } = req.params;
-    const { data_emprestimo, data_devolucao, data_pagamento_multa, descricao, idExemplarEmprestado } = req.body;
-    if (!data_emprestimo || !idExemplarEmprestado)
-        return res.status(400).json({ erro: 'data_emprestimo e idExemplarEmprestado são obrigatórios' });
+    const { data_emprestimo, data_devolucao, data_pagamento_multa, descricao, idExemplar_Emprestado } = req.body;
+    if (!data_emprestimo || !idExemplar_Emprestado)
+        return res.status(400).json({ erro: 'data_emprestimo e idExemplar_Emprestado são obrigatórios' });
     try {
         const pool = await getPool();
         const result = await pool.request()
@@ -874,12 +874,12 @@ app.put('/historico/:id', async (req, res) => {
             .input('data_devolucao', sql.Date, data_devolucao ?? null)
             .input('data_pagamento_multa', sql.Date, data_pagamento_multa ?? null)
             .input('descricao', sql.VarChar(255), descricao ?? null)
-            .input('idExemplarEmprestado', sql.Int, idExemplarEmprestado)
+            .input('idExemplar_Emprestado', sql.Int, idExemplar_Emprestado)
             .query(`
                 UPDATE Historico
                 SET data_emprestimo = @data_emprestimo, data_devolucao = @data_devolucao,
                     data_pagamento_multa = @data_pagamento_multa, descricao = @descricao,
-                    idExemplarEmprestado = @idExemplarEmprestado
+                    idExemplar_Emprestado = @idExemplar_Emprestado
                 WHERE id = @id
             `);
         if (result.rowsAffected[0] === 0)
