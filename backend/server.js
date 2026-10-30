@@ -372,6 +372,24 @@ app.get('/exemplar-emprestado/:id', async (req, res) => {
   }
 });
 
+app.get('/exemplar/disponiveis', async (req, res) => {
+    try {
+        const pool = await getPool();
+        const result = await pool.request().query(`
+            SELECT 
+                ex.id,
+                ex.numero_exemplar AS numeroExemplar,
+                l.titulo AS nomeLivro
+            FROM Exemplar ex
+            INNER JOIN Livro l ON ex.idLivro = l.id
+            WHERE ex.status = 1
+        `);
+        res.json(result.recordset);
+    } catch (err) {
+        res.status(500).json({ erro: err.message });
+    }
+});
+
 app.get('/historico', async (req, res) => {
   try {
     const pool = await getPool();

@@ -12,6 +12,12 @@ interface Aluno {
   cpf: string;
 }
 
+interface ExemplarItem {
+  id: number;
+  numeroExemplar: number;
+  nomeLivro: string;
+}
+
 interface Emprestimo {
   id: number;
   idAluno: number;
@@ -45,6 +51,7 @@ export class ExemplarComponent implements OnInit {
   // ─── Dados ────────────────────────────────────────────────────────────────
 
   alunos: Aluno[] = [];
+  exemplaresDisponiveis: ExemplarItem[] = [];
   todosEmprestimos: Emprestimo[] = [];
   emprestimosFiltrados: Emprestimo[] = [];
 
@@ -79,6 +86,7 @@ export class ExemplarComponent implements OnInit {
   ngOnInit(): void {
     this.resetarDatas();
     this.carregarAlunos();
+    this.carregarExemplaresDisponiveis();
     this.carregarEmprestimos();
   }
 
@@ -91,6 +99,18 @@ export class ExemplarComponent implements OnInit {
       );
     } catch {
       this.alunos = [];
+    }
+  }
+
+  // ─── Carregar exemplares disponíveis ──────────────────────────────────────
+
+  async carregarExemplaresDisponiveis(): Promise<void> {
+    try {
+      this.exemplaresDisponiveis = await firstValueFrom(
+        this.http.get<ExemplarItem[]>(`${this.API}/exemplar/disponiveis`)
+      );
+    } catch {
+      this.exemplaresDisponiveis = [];
     }
   }
 
@@ -119,6 +139,7 @@ export class ExemplarComponent implements OnInit {
       this.setMsg('Empréstimo registrado com sucesso!', 'ok');
       this.limparFormulario();
       await this.carregarEmprestimos();
+      await this.carregarExemplaresDisponiveis(); // Recarrega a lista para remover o exemplar emprestado
     } catch (err) {
       const httpErr = err as HttpErrorResponse;
       this.setMsg(httpErr?.error?.erro ?? 'Erro ao conectar com o servidor.', 'erro');
@@ -160,6 +181,7 @@ export class ExemplarComponent implements OnInit {
         })
       );
       await this.carregarEmprestimos();
+      await this.carregarExemplaresDisponiveis(); // Recarrega a lista para incluir o exemplar devolvido
     } catch (err) {
       const httpErr = err as HttpErrorResponse;
       alert(`Erro: ${httpErr?.error?.erro ?? 'Erro ao conectar com o servidor.'}`);
