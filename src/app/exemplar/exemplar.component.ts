@@ -33,7 +33,7 @@ interface ApiResponse {
   mensagem?: string;
 }
 
-type StatusEmprestimo = 'devolvido' | 'atraso' | 'vencendo' | 'ativo' ;
+type StatusEmprestimo = 'devolvido' | 'atraso' | 'vencendo' | 'ativo';
 
 // ─── Component ────────────────────────────────────────────────────────────────
 
@@ -45,7 +45,6 @@ type StatusEmprestimo = 'devolvido' | 'atraso' | 'vencendo' | 'ativo' ;
   styleUrl: './exemplar.component.css',
 })
 export class ExemplarComponent implements OnInit {
-
   private readonly API = 'http://localhost:4000';
 
   // ─── Dados ────────────────────────────────────────────────────────────────
@@ -94,9 +93,7 @@ export class ExemplarComponent implements OnInit {
 
   async carregarAlunos(): Promise<void> {
     try {
-      this.alunos = await firstValueFrom(
-        this.http.get<Aluno[]>(`${this.API}/alunos`)
-      );
+      this.alunos = await firstValueFrom(this.http.get<Aluno[]>(`${this.API}/alunos`));
     } catch {
       this.alunos = [];
     }
@@ -107,7 +104,7 @@ export class ExemplarComponent implements OnInit {
   async carregarExemplaresDisponiveis(): Promise<void> {
     try {
       this.exemplaresDisponiveis = await firstValueFrom(
-        this.http.get<ExemplarItem[]>(`${this.API}/exemplar/disponiveis`)
+        this.http.get<ExemplarItem[]>(`${this.API}/exemplar/disponiveis`),
       );
     } catch {
       this.exemplaresDisponiveis = [];
@@ -133,7 +130,7 @@ export class ExemplarComponent implements OnInit {
           idExemplar: Number(this.idExemplar),
           dataEmprestimo: this.dataEmprestimo,
           dataDevolucao: this.dataDevolucao || null,
-        })
+        }),
       );
 
       this.setMsg('Empréstimo registrado com sucesso!', 'ok');
@@ -156,7 +153,7 @@ export class ExemplarComponent implements OnInit {
 
     try {
       this.todosEmprestimos = await firstValueFrom(
-        this.http.get<Emprestimo[]>(`${this.API}/exemplar-emprestado`)
+        this.http.get<Emprestimo[]>(`${this.API}/exemplar-emprestado`),
       );
       this.atualizarCards(this.todosEmprestimos);
       this.filtrarTabela();
@@ -178,7 +175,7 @@ export class ExemplarComponent implements OnInit {
       await firstValueFrom(
         this.http.put<ApiResponse>(`${this.API}/exemplar-emprestado/${id}/devolver`, {
           dataDevolucao: new Date().toISOString().split('T')[0],
-        })
+        }),
       );
       await this.carregarEmprestimos();
       await this.carregarExemplaresDisponiveis(); // Recarrega a lista para incluir o exemplar devolvido
@@ -190,6 +187,17 @@ export class ExemplarComponent implements OnInit {
     }
   }
 
+  async devolverEmprestimo(id: number): Promise<void> {
+    try {
+      await firstValueFrom(this.http.put(`${this.API}/exemplar-emprestado/${id}/devolver`, {}));
+      // Recarrega a lista após devolver com sucesso
+      this.carregarEmprestimos();
+    } catch (err) {
+      console.error('Erro ao realizar devolução:', err);
+      alert('Não foi possível concluir a devolução.');
+    }
+  }
+
   // ─── Cards de resumo ──────────────────────────────────────────────────────
 
   atualizarCards(dados: Emprestimo[]): void {
@@ -197,12 +205,12 @@ export class ExemplarComponent implements OnInit {
     const em3 = new Date(hoje);
     em3.setDate(em3.getDate() + 3);
 
-    const ativos = dados.filter(d => !d.dataDevolucao);
-    this.totalAtivos   = ativos.length;
-    this.totalAtraso   = ativos.filter(d =>
-      d.dataDevolucaoPrevista && new Date(d.dataDevolucaoPrevista) < hoje
+    const ativos = dados.filter((d) => !d.dataDevolucao);
+    this.totalAtivos = ativos.length;
+    this.totalAtraso = ativos.filter(
+      (d) => d.dataDevolucaoPrevista && new Date(d.dataDevolucaoPrevista) < hoje,
     ).length;
-    this.totalVencendo = ativos.filter(d => {
+    this.totalVencendo = ativos.filter((d) => {
       if (!d.dataDevolucaoPrevista) return false;
       const dt = new Date(d.dataDevolucaoPrevista);
       return dt >= hoje && dt <= em3;
@@ -216,21 +224,21 @@ export class ExemplarComponent implements OnInit {
     if (!emp.dataDevolucaoPrevista) return 'ativo';
 
     const hoje = this.hoje();
-    const em3  = new Date(hoje);
+    const em3 = new Date(hoje);
     em3.setDate(em3.getDate() + 3);
-    const dev  = new Date(emp.dataDevolucaoPrevista);
+    const dev = new Date(emp.dataDevolucaoPrevista);
 
     if (dev < hoje) return 'atraso';
-    if (dev <= em3)  return 'vencendo';
+    if (dev <= em3) return 'vencendo';
     return 'ativo';
   }
 
   getStatusLabel(emp: Emprestimo): string {
     const map: Record<StatusEmprestimo, string> = {
       devolvido: 'Devolvido',
-      atraso:    'Em atraso',
-      vencendo:  'Vence em breve',
-      ativo:     'Ativo',
+      atraso: 'Em atraso',
+      vencendo: 'Vence em breve',
+      ativo: 'Ativo',
     };
     return map[this.getStatus(emp)];
   }
@@ -238,9 +246,9 @@ export class ExemplarComponent implements OnInit {
   getStatusClasse(emp: Emprestimo): string {
     const map: Record<StatusEmprestimo, string> = {
       devolvido: 'bg-slate-100 text-slate-500',
-      atraso:    'bg-red-100 text-red-600',
-      vencendo:  'bg-yellow-100 text-yellow-600',
-      ativo:     'bg-emerald-100 text-emerald-600',
+      atraso: 'bg-red-100 text-red-600',
+      vencendo: 'bg-yellow-100 text-yellow-600',
+      ativo: 'bg-emerald-100 text-emerald-600',
     };
     return `px-2.5 py-1 rounded-full text-xs font-semibold ${map[this.getStatus(emp)]}`;
   }
@@ -250,9 +258,7 @@ export class ExemplarComponent implements OnInit {
   filtrarTabela(): void {
     const termo = this.termoBusca.trim().toLowerCase();
     this.emprestimosFiltrados = termo
-      ? this.todosEmprestimos.filter(d =>
-          (d.nomeAluno ?? '').toLowerCase().includes(termo)
-        )
+      ? this.todosEmprestimos.filter((d) => (d.nomeAluno ?? '').toLowerCase().includes(termo))
       : [...this.todosEmprestimos];
   }
 
@@ -279,7 +285,7 @@ export class ExemplarComponent implements OnInit {
   }
 
   private setMsg(texto: string, tipo: 'ok' | 'erro'): void {
-    this.msg     = texto;
+    this.msg = texto;
     this.msgTipo = tipo;
   }
 
@@ -292,9 +298,9 @@ export class ExemplarComponent implements OnInit {
 
   limparFormulario(): void {
     this.idAlunoSelecionado = '';
-    this.idExemplar         = '';
-    this.msg                = '';
-    this.msgTipo            = '';
+    this.idExemplar = '';
+    this.msg = '';
+    this.msgTipo = '';
     this.resetarDatas();
   }
 }
