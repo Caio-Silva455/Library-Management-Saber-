@@ -396,34 +396,19 @@ app.get('/historico', async (req, res) => {
         const pool = await getPool();
         const { busca } = req.query;
 
-        let querySQL = `
-            SELECT 
-                h.id,
-                a.nome AS nomeAluno,
-                l.titulo AS nomeLivro,
-                ee.numero_exemplar AS numeroExemplar,
-                h.data_emprestimo AS dataEmprestimo,
-                h.data_devolucao_estimada AS dataDevolucaoPrevista,
-                h.data_devolucao AS dataDevolucao,
-                h.valor_multa AS valorMulta,
-                h.status
-            FROM Historico h
-            INNER JOIN Aluno a ON h.idAluno = a.id
-            INNER JOIN Exemplar_Emprestado ee ON h.idExemplarEmprestado = ee.id
-            INNER JOIN Exemplar ex ON ee.idExemplar = ex.id
-            INNER JOIN Livro l ON ex.idLivro = l.id
-        `;
+        let querySQL = `SELECT * FROM Historico`;
 
         if (busca) {
-            querySQL += ` WHERE a.nome LIKE '%${busca}%' OR l.titulo LIKE '%${busca}%'`;
+            // Se houver termo de busca, filtra se a tabela tiver colunas de texto
+            querySQL += ` WHERE status LIKE '%${busca}%'`;
         }
 
-        querySQL += ` ORDER BY h.id DESC`;
+        querySQL += ` ORDER BY id DESC`;
 
         const result = await pool.request().query(querySQL);
         res.json(result.recordset);
     } catch (err) {
-        console.error("Erro no histórico:", err);
+        console.error("Erro detalhado no histórico:", err);
         res.status(500).json({ erro: err.message });
     }
 });
