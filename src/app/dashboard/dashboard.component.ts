@@ -144,7 +144,7 @@ export class DashboardComponent implements OnInit {
     this.erroBusca = '';
     this.resultados = [];
     this.ultimaBusca = this.termoBusca.trim() || 'Todos os registros';
-    this.cdr.detectChanges(); // Mostra o spinner de "Buscando..." imediatamente
+    this.cdr.detectChanges(); 
 
     this.http
       .get<any[]>(`${this.API}/${endpoint}?busca=${encodeURIComponent(this.termoBusca.trim())}`)
@@ -154,7 +154,7 @@ export class DashboardComponent implements OnInit {
           this.colunas = this.colunasMap[this.tabelaSelecionada] ?? [];
           this.carregandoBusca = false;
           this.buscaRealizada = true;
-          this.cdr.detectChanges(); // CRUCIAL: Força a tabela a renderizar os dados na hora!
+          this.cdr.detectChanges(); 
         },
         error: (err) => {
           this.erroBusca = err?.error?.erro ?? err?.message ?? 'Erro ao conectar com a API.';

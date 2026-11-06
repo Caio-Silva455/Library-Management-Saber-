@@ -390,37 +390,41 @@ app.get('/exemplar/disponiveis', async (req, res) => {
     }
 });
 
+// ─── Rota para buscar o histórico completo de empréstimos e multas ─────────
 app.get('/historico', async (req, res) => {
-  try {
-    const pool = await getPool();
-    const termo = req.query.busca;
-    let querySQL = `
+    try {
+        const pool = await getPool();
+        const { busca } = req.query;
+
+        let querySQL = `
             SELECT 
-                h.id, 
-                h.data_emprestimo, 
-                h.data_devolucao, 
-                h.data_pagamento_multa, 
-                h.descricao, 
-                h.idExemplar_Emprestado,
-                al.nome AS nome_aluno, 
-                liv.titulo AS titulo_livro
-            FROM Historico h
-            INNER JOIN Exemplar_Emprestado ee ON h.idExemplar_Emprestado = ee.id
-            INNER JOIN Aluno al ON ee.idAluno = al.id
+                ee.id,
+                a.nome AS nomeAluno,
+                l.titulo AS nomeLivro,
+                ee.numero_exemplar AS numeroExemplar,
+                ee.data_emprestimo AS dataEmprestimo,
+                ee.data_devolucao_estimada AS dataDevolucaoPrevista,
+                ee.data_devolucao AS dataDevolucao,
+                ee.valor_multa AS valorMulta,
+                ee.status
+            FROM Exemplar_Emprestado ee
+            INNER JOIN Aluno a ON ee.idAluno = a.id
             INNER JOIN Exemplar ex ON ee.idExemplar = ex.id
-            INNER JOIN Livro liv ON ex.idLivro = liv.id
+            INNER JOIN Livro l ON ex.idLivro = l.id
         `;
-    const request = pool.request();
-    if (termo) {
-      querySQL += ' WHERE al.nome LIKE @filtro OR liv.titulo LIKE @filtro';
-      request.input('filtro', sql.VarChar, `%${termo}%`);
+
+        if (busca) {
+            querySQL += ` WHERE a.nome LIKE '%${busca}%' OR l.titulo LIKE '%${busca}%'`;
+        }
+
+        querySQL += ` ORDER BY ee.id DESC`;
+
+        const result = await pool.request().query(querySQL);
+        res.json(result.recordset);
+    } catch (err) {
+        console.error("Erro no histórico:", err);
+        res.status(500).json({ erro: err.message });
     }
-    querySQL += ' ORDER BY h.id DESC';
-    const result = await request.query(querySQL);
-    res.json(result.recordset);
-  } catch (err) {
-    res.status(500).json({ erro: err.message });
-  }
 });
 
 app.get('/historico/:id', async (req, res) => {
@@ -448,7 +452,7 @@ app.get('/historico/:id', async (req, res) => {
 
 app.post('/alunos', async (req, res) => {
   const { nome, cpf, telefone, email, turma, idEndereco } = req.body;
-  const data_nascimento = req.body.data_nascimento || req.body.dataNascimento; // <--- Aceita os dois formatos
+  const data_nascimento = req.body.data_nascimento || req.body.dataNascimento; 
 
   if (!nome || !cpf || !telefone || !data_nascimento || !idEndereco)
     return res

@@ -33,7 +33,7 @@ interface ApiResponse {
   mensagem?: string;
 }
 
-type StatusEmprestimo = 'devolvido' | 'atraso' | 'vencendo' | 'ativo';
+type StatusEmprestimo = 'devolvido' | 'atraso' | 'vencendo' | 'ativo' ;
 
 // ─── Component ────────────────────────────────────────────────────────────────
 

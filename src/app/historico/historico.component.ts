@@ -100,6 +100,8 @@ export class HistoricoComponent implements OnInit {
     }
   }
 
+  
+
   // ─── Limpar filtro ───────────────────────────────────────────────────────
 
   limparFiltro(): void {
