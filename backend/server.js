@@ -390,7 +390,7 @@ app.get('/exemplar/disponiveis', async (req, res) => {
     }
 });
 
-// ─── Rota para buscar o histórico completo de empréstimos e multas ─────────
+// ─── Rota para buscar o histórico de empréstimos ───────────────────────────
 app.get('/historico', async (req, res) => {
     try {
         const pool = await getPool();
@@ -398,17 +398,18 @@ app.get('/historico', async (req, res) => {
 
         let querySQL = `
             SELECT 
-                ee.id,
+                h.id,
                 a.nome AS nomeAluno,
                 l.titulo AS nomeLivro,
                 ee.numero_exemplar AS numeroExemplar,
-                ee.data_emprestimo AS dataEmprestimo,
-                ee.data_devolucao_estimada AS dataDevolucaoPrevista,
-                ee.data_devolucao AS dataDevolucao,
-                ee.valor_multa AS valorMulta,
-                ee.status
-            FROM Exemplar_Emprestado ee
-            INNER JOIN Aluno a ON ee.idAluno = a.id
+                h.data_emprestimo AS dataEmprestimo,
+                h.data_devolucao_estimada AS dataDevolucaoPrevista,
+                h.data_devolucao AS dataDevolucao,
+                h.valor_multa AS valorMulta,
+                h.status
+            FROM Historico h
+            INNER JOIN Aluno a ON h.idAluno = a.id
+            INNER JOIN Exemplar_Emprestado ee ON h.idExemplarEmprestado = ee.id
             INNER JOIN Exemplar ex ON ee.idExemplar = ex.id
             INNER JOIN Livro l ON ex.idLivro = l.id
         `;
@@ -417,7 +418,7 @@ app.get('/historico', async (req, res) => {
             querySQL += ` WHERE a.nome LIKE '%${busca}%' OR l.titulo LIKE '%${busca}%'`;
         }
 
-        querySQL += ` ORDER BY ee.id DESC`;
+        querySQL += ` ORDER BY h.id DESC`;
 
         const result = await pool.request().query(querySQL);
         res.json(result.recordset);
