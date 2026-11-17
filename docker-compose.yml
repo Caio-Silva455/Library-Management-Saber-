@@ -24,7 +24,8 @@ services:
       dockerfile: Dockerfile
     container_name: biblioteca-backend
     env_file:
-      - .env
+      - path: .env
+        required: false
     environment:
       DB_SERVER: db
       DB_PORT: 1433
@@ -67,3 +68,4 @@ networks:
 
 volumes:
   db-data:
+  uptime-kuma:
