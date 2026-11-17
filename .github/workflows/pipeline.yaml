@@ -7,7 +7,6 @@ on:
     branches: [main]
   workflow_dispatch:
 
-
 concurrency:
   group: ci-cd-${{ github.ref }}
   cancel-in-progress: true
@@ -59,7 +58,6 @@ jobs:
       - name: Checar sintaxe do server.js
         run: node --check server.js
 
-
   docker:
     name: Docker Compose - build e smoke test
     runs-on: ubuntu-latest
@@ -73,16 +71,14 @@ jobs:
       - name: Validar docker-compose.yml
         run: docker compose config --quiet
 
-
       - name: Build e subida dos containers
         run: docker compose up -d --build
 
       - name: Smoke test - frontend responde na porta 8080
         run: |
           curl --fail --silent --show-error \
-            --retry 10 --retry-delay 3 --retry-connrefused \
+            --retry 10 --retry-delay 3 --retry-all-errors \
             -o /dev/null http://localhost:8080/
-
 
       - name: Smoke test - backend conecta no banco
         run: |
@@ -109,7 +105,6 @@ jobs:
         if: always()
         run: docker compose down -v
 
-
   publish:
     name: Publicar imagens no GHCR
     runs-on: ubuntu-latest
@@ -121,7 +116,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-
 
       - name: Dono do repositório em minúsculas
         run: echo "OWNER=${GITHUB_REPOSITORY_OWNER,,}" >> "$GITHUB_ENV"
