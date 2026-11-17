@@ -74,6 +74,13 @@ jobs:
       - name: Build e subida dos containers
         run: docker compose up -d --build
 
+      - name: Inicializar banco de dados e tabelas
+        run: |
+          docker cp database/init.sql biblioteca-db:/tmp/init.sql
+          docker exec biblioteca-db /opt/mssql-tools18/bin/sqlcmd \
+            -S localhost -U sa -P "$DB_SA_PASSWORD" -C \
+            -i /tmp/init.sql
+
       - name: Smoke test - frontend responde na porta 8080
         run: |
           curl --fail --silent --show-error \
